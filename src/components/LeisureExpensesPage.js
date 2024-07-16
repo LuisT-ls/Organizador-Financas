@@ -15,8 +15,8 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import { useGlobalState } from '../context/GlobalState'
 
-function EmergencyFund() {
-  const { emergencyFunds, setEmergencyFunds } = useGlobalState()
+function LeisureExpensesPage() {
+  const { leisureExpenses, setLeisureExpenses } = useGlobalState()
   const [editIndex, setEditIndex] = useState(-1)
   const [editDescription, setEditDescription] = useState('')
   const [editAmount, setEditAmount] = useState('')
@@ -25,8 +25,8 @@ function EmergencyFund() {
 
   const handleAdd = e => {
     e.preventDefault()
-    setEmergencyFunds(prevFunds => [
-      ...prevFunds,
+    setLeisureExpenses(prevExpenses => [
+      ...prevExpenses,
       { description, amount: parseFloat(amount) }
     ])
     setDescription('')
@@ -34,23 +34,23 @@ function EmergencyFund() {
   }
 
   const handleDelete = index => {
-    const newFunds = emergencyFunds.filter((_, i) => i !== index)
-    setEmergencyFunds(newFunds)
+    const newExpenses = leisureExpenses.filter((_, i) => i !== index)
+    setLeisureExpenses(newExpenses)
   }
 
   const handleEdit = index => {
     setEditIndex(index)
-    setEditDescription(emergencyFunds[index].description)
-    setEditAmount(emergencyFunds[index].amount)
+    setEditDescription(leisureExpenses[index].description)
+    setEditAmount(leisureExpenses[index].amount)
   }
 
   const handleSave = index => {
-    const newFunds = emergencyFunds.map((fund, i) =>
+    const newExpenses = leisureExpenses.map((expense, i) =>
       i === index
         ? { description: editDescription, amount: parseFloat(editAmount) }
-        : fund
+        : expense
     )
-    setEmergencyFunds(newFunds)
+    setLeisureExpenses(newExpenses)
     setEditIndex(-1)
     setEditDescription('')
     setEditAmount('')
@@ -67,7 +67,7 @@ function EmergencyFund() {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Paper style={{ padding: '16px' }}>
-            <Typography variant="h4">Fundos de Emergência</Typography>
+            <Typography variant="h4">Gastos com Lazer</Typography>
             <form onSubmit={handleAdd}>
               <TextField
                 label="Descrição"
@@ -96,7 +96,7 @@ function EmergencyFund() {
               </Button>
             </form>
             <List>
-              {emergencyFunds.map((fund, index) => (
+              {leisureExpenses.map((expense, index) => (
                 <ListItem
                   key={index}
                   secondaryAction={
@@ -165,9 +165,9 @@ function EmergencyFund() {
                     </div>
                   ) : (
                     <ListItemText
-                      primary={`${fund.description}: R$${fund.amount.toFixed(
-                        2
-                      )}`}
+                      primary={`${
+                        expense.description
+                      }: R$${expense.amount.toFixed(2)}`}
                     />
                   )}
                 </ListItem>
@@ -180,4 +180,4 @@ function EmergencyFund() {
   )
 }
 
-export default EmergencyFund
+export default LeisureExpensesPage

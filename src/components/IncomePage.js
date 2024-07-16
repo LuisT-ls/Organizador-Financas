@@ -15,50 +15,48 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import { useGlobalState } from '../context/GlobalState'
 
-function EmergencyFund() {
-  const { emergencyFunds, setEmergencyFunds } = useGlobalState()
+function IncomePage() {
+  const { income, setIncome } = useGlobalState()
   const [editIndex, setEditIndex] = useState(-1)
-  const [editDescription, setEditDescription] = useState('')
+  const [editSource, setEditSource] = useState('')
   const [editAmount, setEditAmount] = useState('')
-  const [description, setDescription] = useState('')
+  const [source, setSource] = useState('')
   const [amount, setAmount] = useState('')
 
   const handleAdd = e => {
     e.preventDefault()
-    setEmergencyFunds(prevFunds => [
-      ...prevFunds,
-      { description, amount: parseFloat(amount) }
+    setIncome(prevIncome => [
+      ...prevIncome,
+      { source, amount: parseFloat(amount) }
     ])
-    setDescription('')
+    setSource('')
     setAmount('')
   }
 
   const handleDelete = index => {
-    const newFunds = emergencyFunds.filter((_, i) => i !== index)
-    setEmergencyFunds(newFunds)
+    const newIncome = income.filter((_, i) => i !== index)
+    setIncome(newIncome)
   }
 
   const handleEdit = index => {
     setEditIndex(index)
-    setEditDescription(emergencyFunds[index].description)
-    setEditAmount(emergencyFunds[index].amount)
+    setEditSource(income[index].source)
+    setEditAmount(income[index].amount)
   }
 
   const handleSave = index => {
-    const newFunds = emergencyFunds.map((fund, i) =>
-      i === index
-        ? { description: editDescription, amount: parseFloat(editAmount) }
-        : fund
+    const newIncome = income.map((inc, i) =>
+      i === index ? { source: editSource, amount: parseFloat(editAmount) } : inc
     )
-    setEmergencyFunds(newFunds)
+    setIncome(newIncome)
     setEditIndex(-1)
-    setEditDescription('')
+    setEditSource('')
     setEditAmount('')
   }
 
   const handleCancel = () => {
     setEditIndex(-1)
-    setEditDescription('')
+    setEditSource('')
     setEditAmount('')
   }
 
@@ -67,12 +65,12 @@ function EmergencyFund() {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Paper style={{ padding: '16px' }}>
-            <Typography variant="h4">Fundos de Emergência</Typography>
+            <Typography variant="h4">Receitas</Typography>
             <form onSubmit={handleAdd}>
               <TextField
-                label="Descrição"
-                value={description}
-                onChange={e => setDescription(e.target.value)}
+                label="Fonte"
+                value={source}
+                onChange={e => setSource(e.target.value)}
                 fullWidth
                 margin="normal"
                 required
@@ -96,7 +94,7 @@ function EmergencyFund() {
               </Button>
             </form>
             <List>
-              {emergencyFunds.map((fund, index) => (
+              {income.map((inc, index) => (
                 <ListItem
                   key={index}
                   secondaryAction={
@@ -146,9 +144,9 @@ function EmergencyFund() {
                   {editIndex === index ? (
                     <div>
                       <TextField
-                        label="Descrição"
-                        value={editDescription}
-                        onChange={e => setEditDescription(e.target.value)}
+                        label="Fonte"
+                        value={editSource}
+                        onChange={e => setEditSource(e.target.value)}
                         fullWidth
                         margin="normal"
                         required
@@ -165,9 +163,7 @@ function EmergencyFund() {
                     </div>
                   ) : (
                     <ListItemText
-                      primary={`${fund.description}: R$${fund.amount.toFixed(
-                        2
-                      )}`}
+                      primary={`${inc.source}: R$${inc.amount.toFixed(2)}`}
                     />
                   )}
                 </ListItem>
@@ -180,4 +176,4 @@ function EmergencyFund() {
   )
 }
 
-export default EmergencyFund
+export default IncomePage

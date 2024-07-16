@@ -9,57 +9,68 @@ import {
   List,
   ListItem,
   ListItemText,
-  IconButton
+  IconButton,
+  MenuItem
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import { useGlobalState } from '../context/GlobalState'
 
-function EmergencyFund() {
-  const { emergencyFunds, setEmergencyFunds } = useGlobalState()
+function ExpensesPage() {
+  const { expenses, setExpenses } = useGlobalState()
   const [editIndex, setEditIndex] = useState(-1)
   const [editDescription, setEditDescription] = useState('')
   const [editAmount, setEditAmount] = useState('')
+  const [editCategory, setEditCategory] = useState('')
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
+  const [category, setCategory] = useState('')
 
   const handleAdd = e => {
     e.preventDefault()
-    setEmergencyFunds(prevFunds => [
-      ...prevFunds,
-      { description, amount: parseFloat(amount) }
+    setExpenses(prevExpenses => [
+      ...prevExpenses,
+      { description, amount: parseFloat(amount), category }
     ])
     setDescription('')
     setAmount('')
+    setCategory('')
   }
 
   const handleDelete = index => {
-    const newFunds = emergencyFunds.filter((_, i) => i !== index)
-    setEmergencyFunds(newFunds)
+    const newExpenses = expenses.filter((_, i) => i !== index)
+    setExpenses(newExpenses)
   }
 
   const handleEdit = index => {
     setEditIndex(index)
-    setEditDescription(emergencyFunds[index].description)
-    setEditAmount(emergencyFunds[index].amount)
+    setEditDescription(expenses[index].description)
+    setEditAmount(expenses[index].amount)
+    setEditCategory(expenses[index].category)
   }
 
   const handleSave = index => {
-    const newFunds = emergencyFunds.map((fund, i) =>
+    const newExpenses = expenses.map((expense, i) =>
       i === index
-        ? { description: editDescription, amount: parseFloat(editAmount) }
-        : fund
+        ? {
+            description: editDescription,
+            amount: parseFloat(editAmount),
+            category: editCategory
+          }
+        : expense
     )
-    setEmergencyFunds(newFunds)
+    setExpenses(newExpenses)
     setEditIndex(-1)
     setEditDescription('')
     setEditAmount('')
+    setEditCategory('')
   }
 
   const handleCancel = () => {
     setEditIndex(-1)
     setEditDescription('')
     setEditAmount('')
+    setEditCategory('')
   }
 
   return (
@@ -67,7 +78,7 @@ function EmergencyFund() {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Paper style={{ padding: '16px' }}>
-            <Typography variant="h4">Fundos de Emergência</Typography>
+            <Typography variant="h4">Despesas</Typography>
             <form onSubmit={handleAdd}>
               <TextField
                 label="Descrição"
@@ -86,6 +97,22 @@ function EmergencyFund() {
                 margin="normal"
                 required
               />
+              <TextField
+                select
+                label="Categoria"
+                value={category}
+                onChange={e => setCategory(e.target.value)}
+                fullWidth
+                margin="normal"
+                required
+              >
+                <MenuItem value="Alimentação">Alimentação</MenuItem>
+                <MenuItem value="Moradia">Moradia</MenuItem>
+                <MenuItem value="Lazer">Lazer</MenuItem>
+                <MenuItem value="Saúde">Saúde</MenuItem>
+                <MenuItem value="Transporte">Transporte</MenuItem>
+                <MenuItem value="Educação">Educação</MenuItem>
+              </TextField>
               <Button
                 type="submit"
                 variant="contained"
@@ -96,7 +123,7 @@ function EmergencyFund() {
               </Button>
             </form>
             <List>
-              {emergencyFunds.map((fund, index) => (
+              {expenses.map((expense, index) => (
                 <ListItem
                   key={index}
                   secondaryAction={
@@ -162,12 +189,28 @@ function EmergencyFund() {
                         margin="normal"
                         required
                       />
+                      <TextField
+                        select
+                        label="Categoria"
+                        value={editCategory}
+                        onChange={e => setEditCategory(e.target.value)}
+                        fullWidth
+                        margin="normal"
+                        required
+                      >
+                        <MenuItem value="Alimentação">Alimentação</MenuItem>
+                        <MenuItem value="Moradia">Moradia</MenuItem>
+                        <MenuItem value="Lazer">Lazer</MenuItem>
+                        <MenuItem value="Saúde">Saúde</MenuItem>
+                        <MenuItem value="Transporte">Transporte</MenuItem>
+                        <MenuItem value="Educação">Educação</MenuItem>
+                      </TextField>
                     </div>
                   ) : (
                     <ListItemText
-                      primary={`${fund.description}: R$${fund.amount.toFixed(
-                        2
-                      )}`}
+                      primary={`${expense.description} - ${
+                        expense.category
+                      }: R$${expense.amount.toFixed(2)}`}
                     />
                   )}
                 </ListItem>
@@ -180,4 +223,4 @@ function EmergencyFund() {
   )
 }
 
-export default EmergencyFund
+export default ExpensesPage

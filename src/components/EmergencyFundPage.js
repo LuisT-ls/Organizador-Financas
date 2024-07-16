@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import {
+  Typography,
+  Paper,
   Container,
   Grid,
-  Paper,
-  Typography,
   TextField,
   Button,
   List,
@@ -13,10 +13,8 @@ import {
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
-import { useGlobalState } from '../context/GlobalState'
 
-function EmergencyFund() {
-  const { emergencyFunds, setEmergencyFunds } = useGlobalState()
+function EmergencyFundPage({ emergencyFunds, setEmergencyFunds }) {
   const [editIndex, setEditIndex] = useState(-1)
   const [editDescription, setEditDescription] = useState('')
   const [editAmount, setEditAmount] = useState('')
@@ -67,7 +65,7 @@ function EmergencyFund() {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Paper style={{ padding: '16px' }}>
-            <Typography variant="h4">Fundos de Emergência</Typography>
+            <Typography variant="h4">Fundo de Emergência</Typography>
             <form onSubmit={handleAdd}>
               <TextField
                 label="Descrição"
@@ -180,4 +178,4 @@ function EmergencyFund() {
   )
 }
 
-export default EmergencyFund
+export default EmergencyFundPage

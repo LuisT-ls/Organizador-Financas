@@ -1,38 +1,48 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+import { TextField, Button, Grid } from '@mui/material'
 
-function IncomeForm({ onIncomeSubmit, initialValue }) {
-  const [income, setIncome] = useState(initialValue || '')
-
-  useEffect(() => {
-    setIncome(initialValue || '')
-  }, [initialValue])
+function IncomeForm({ setIncome }) {
+  const [source, setSource] = useState('')
+  const [amount, setAmount] = useState('')
 
   const handleSubmit = e => {
     e.preventDefault()
-    const incomeValue = parseFloat(income)
-    if (!isNaN(incomeValue) && incomeValue > 0) {
-      onIncomeSubmit(incomeValue)
-      setIncome('')
-    } else {
-      alert('Por favor, insira um valor válido para a renda.')
-    }
+    setIncome(prevIncome => [
+      ...prevIncome,
+      { source, amount: parseFloat(amount) }
+    ])
+    setSource('')
+    setAmount('')
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      <h3>{initialValue ? 'Editar' : 'Inserir'} Renda</h3>
-      <input
-        type="number"
-        value={income}
-        onChange={e => setIncome(e.target.value)}
-        placeholder="Insira sua renda"
-        step="0.01"
-        min="0"
-        required
-      />
-      <button type="submit">
-        {initialValue ? 'Atualizar' : 'Adicionar'} Renda
-      </button>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <TextField
+            label="Fonte"
+            value={source}
+            onChange={e => setSource(e.target.value)}
+            fullWidth
+            required
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            label="Valor"
+            type="number"
+            value={amount}
+            onChange={e => setAmount(e.target.value)}
+            fullWidth
+            required
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Button type="submit" variant="contained" color="primary" fullWidth>
+            Adicionar
+          </Button>
+        </Grid>
+      </Grid>
     </form>
   )
 }
