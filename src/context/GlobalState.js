@@ -28,63 +28,64 @@ export const GlobalStateProvider = ({ children }) => {
             setFixedCosts(data.fixedCosts || [])
             setLeisureExpenses(data.leisureExpenses || [])
             setEmergencyFunds(data.emergencyFunds || [])
-          } else {
-            // Reset states if no data exists for the user
-            setExpenses([])
-            setIncome([])
-            setSavings([])
-            setFixedCosts([])
-            setLeisureExpenses([])
-            setEmergencyFunds([])
           }
         } catch (error) {
           console.error('Error fetching user data: ', error)
         }
-      } else {
-        // Reset states if no user is logged in
-        setExpenses([])
-        setIncome([])
-        setSavings([])
-        setFixedCosts([])
-        setLeisureExpenses([])
-        setEmergencyFunds([])
       }
     }
     fetchData()
   }, [currentUser])
 
-  useEffect(() => {
-    const saveData = async () => {
-      if (currentUser) {
-        try {
-          const userDoc = doc(db, 'users', currentUser.uid)
+  const saveData = async (dataType, data) => {
+    if (currentUser) {
+      try {
+        const userDoc = doc(db, 'users', currentUser.uid)
+        const userDocSnap = await getDoc(userDoc)
+        if (userDocSnap.exists()) {
+          const currentData = userDocSnap.data()
           await setDoc(
             userDoc,
             {
-              expenses,
-              income,
-              savings,
-              fixedCosts,
-              leisureExpenses,
-              emergencyFunds
+              ...currentData,
+              [dataType]: data
             },
             { merge: true }
           )
-        } catch (error) {
-          console.error('Error saving user data: ', error)
+        } else {
+          await setDoc(userDoc, {
+            [dataType]: data
+          })
         }
+      } catch (error) {
+        console.error('Error saving user data: ', error)
       }
     }
-    saveData()
-  }, [
-    currentUser,
-    expenses,
-    income,
-    savings,
-    fixedCosts,
-    leisureExpenses,
-    emergencyFunds
-  ])
+  }
+
+  useEffect(() => {
+    saveData('expenses', expenses)
+  }, [expenses])
+
+  useEffect(() => {
+    saveData('income', income)
+  }, [income])
+
+  useEffect(() => {
+    saveData('savings', savings)
+  }, [savings])
+
+  useEffect(() => {
+    saveData('fixedCosts', fixedCosts)
+  }, [fixedCosts])
+
+  useEffect(() => {
+    saveData('leisureExpenses', leisureExpenses)
+  }, [leisureExpenses])
+
+  useEffect(() => {
+    saveData('emergencyFunds', emergencyFunds)
+  }, [emergencyFunds])
 
   return (
     <GlobalStateContext.Provider

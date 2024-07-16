@@ -1,8 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
-import { getAnalytics } from 'firebase/analytics'
-import { getAuth } from 'firebase/auth' // Importação necessária para autenticação
+import { getAuth } from 'firebase/auth'
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -20,8 +19,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
-const analytics = getAnalytics(app) // eslint-disable-line no-unused-vars
-const db = getFirestore(app) // Inicializa o banco de dados
-const auth = getAuth(app) // Inicializa a autenticação
+const db = getFirestore(app)
+const auth = getAuth(app)
 
-export { db, auth } // Exporta auth para ser utilizado em outros módulos
+export { db, auth }

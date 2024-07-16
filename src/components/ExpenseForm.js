@@ -1,63 +1,51 @@
 import React, { useState } from 'react'
-import TextField from '@mui/material/TextField'
-import Button from '@mui/material/Button'
-import MenuItem from '@mui/material/MenuItem'
+import { useGlobalState } from '../context/GlobalState'
+import { TextField, Button, Paper, Grid } from '@mui/material'
 
-function ExpenseForm({ setExpenses }) {
+function ExpenseForm() {
+  const { expenses, setExpenses } = useGlobalState()
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
-  const [category, setCategory] = useState('')
 
   const handleSubmit = e => {
     e.preventDefault()
-    setExpenses(prevExpenses => [
-      ...prevExpenses,
-      { description, amount: parseFloat(amount), category }
-    ])
+    const newExpense = { description, amount: parseFloat(amount) }
+    setExpenses([...expenses, newExpense])
     setDescription('')
     setAmount('')
-    setCategory('')
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <TextField
-        label="Descrição"
-        value={description}
-        onChange={e => setDescription(e.target.value)}
-        fullWidth
-        margin="normal"
-        required
-      />
-      <TextField
-        label="Valor"
-        type="number"
-        value={amount}
-        onChange={e => setAmount(e.target.value)}
-        fullWidth
-        margin="normal"
-        required
-      />
-      <TextField
-        select
-        label="Categoria"
-        value={category}
-        onChange={e => setCategory(e.target.value)}
-        fullWidth
-        margin="normal"
-        required
-      >
-        <MenuItem value="Alimentação">Alimentação</MenuItem>
-        <MenuItem value="Moradia">Moradia</MenuItem>
-        <MenuItem value="Lazer">Lazer</MenuItem>
-        <MenuItem value="Saúde">Saúde</MenuItem>
-        <MenuItem value="Transporte">Transporte</MenuItem>
-        <MenuItem value="Outros">Outros</MenuItem>
-      </TextField>
-      <Button type="submit" variant="contained" color="primary" fullWidth>
-        Adicionar
-      </Button>
-    </form>
+    <Paper style={{ padding: 16 }}>
+      <form onSubmit={handleSubmit}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              label="Descrição"
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              fullWidth
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Valor"
+              type="number"
+              value={amount}
+              onChange={e => setAmount(e.target.value)}
+              fullWidth
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button type="submit" variant="contained" color="primary" fullWidth>
+              Adicionar Despesa
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+    </Paper>
   )
 }
 
