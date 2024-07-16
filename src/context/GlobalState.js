@@ -17,24 +17,28 @@ export const GlobalStateProvider = ({ children }) => {
   useEffect(() => {
     const fetchData = async () => {
       if (currentUser) {
-        const userDoc = doc(db, 'users', currentUser.uid)
-        const docSnap = await getDoc(userDoc)
-        if (docSnap.exists()) {
-          const data = docSnap.data()
-          setExpenses(data.expenses || [])
-          setIncome(data.income || [])
-          setSavings(data.savings || [])
-          setFixedCosts(data.fixedCosts || [])
-          setLeisureExpenses(data.leisureExpenses || [])
-          setEmergencyFunds(data.emergencyFunds || [])
-        } else {
-          // Reset states if no data exists for the user
-          setExpenses([])
-          setIncome([])
-          setSavings([])
-          setFixedCosts([])
-          setLeisureExpenses([])
-          setEmergencyFunds([])
+        try {
+          const userDoc = doc(db, 'users', currentUser.uid)
+          const docSnap = await getDoc(userDoc)
+          if (docSnap.exists()) {
+            const data = docSnap.data()
+            setExpenses(data.expenses || [])
+            setIncome(data.income || [])
+            setSavings(data.savings || [])
+            setFixedCosts(data.fixedCosts || [])
+            setLeisureExpenses(data.leisureExpenses || [])
+            setEmergencyFunds(data.emergencyFunds || [])
+          } else {
+            // Reset states if no data exists for the user
+            setExpenses([])
+            setIncome([])
+            setSavings([])
+            setFixedCosts([])
+            setLeisureExpenses([])
+            setEmergencyFunds([])
+          }
+        } catch (error) {
+          console.error('Error fetching user data: ', error)
         }
       } else {
         // Reset states if no user is logged in
@@ -52,19 +56,23 @@ export const GlobalStateProvider = ({ children }) => {
   useEffect(() => {
     const saveData = async () => {
       if (currentUser) {
-        const userDoc = doc(db, 'users', currentUser.uid)
-        await setDoc(
-          userDoc,
-          {
-            expenses,
-            income,
-            savings,
-            fixedCosts,
-            leisureExpenses,
-            emergencyFunds
-          },
-          { merge: true }
-        )
+        try {
+          const userDoc = doc(db, 'users', currentUser.uid)
+          await setDoc(
+            userDoc,
+            {
+              expenses,
+              income,
+              savings,
+              fixedCosts,
+              leisureExpenses,
+              emergencyFunds
+            },
+            { merge: true }
+          )
+        } catch (error) {
+          console.error('Error saving user data: ', error)
+        }
       }
     }
     saveData()
