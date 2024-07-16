@@ -6,6 +6,7 @@ import {
   Navigate,
   useLocation
 } from 'react-router-dom'
+import { CssBaseline } from '@mui/material'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import Dashboard from './components/Dashboard'
@@ -46,6 +47,7 @@ function App() {
     <Router>
       <AuthProvider>
         <GlobalStateProvider>
+          <CssBaseline />
           <Routes>
             <Route
               path="/"

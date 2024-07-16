@@ -5,6 +5,7 @@ import ExpensesList from './ExpensesList'
 import IncomeList from './IncomeList'
 import ExpensesChart from './ExpensesChart'
 import ExportData from './ExportData'
+import BudgetAlert from './BudgetAlert' // Adicionar esta linha
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
@@ -14,9 +15,12 @@ import { useGlobalState } from '../context/GlobalState'
 
 function Dashboard() {
   const { expenses, setExpenses, income, setIncome } = useGlobalState()
+  const budget = 500 // Defina o orçamento aqui
 
   return (
     <Container maxWidth="lg" style={{ marginTop: '80px' }}>
+      <BudgetAlert expenses={expenses} budget={budget} />{' '}
+      {/* Adicionar esta linha */}
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Paper style={{ padding: '16px' }}>
@@ -45,7 +49,7 @@ function Dashboard() {
         </Grid>
         <Grid item xs={12}>
           <Paper style={{ padding: '16px' }}>
-            <ExpensesChart expenses={expenses} />
+            <ExpensesChart />
           </Paper>
         </Grid>
         <Grid item xs={12}>
